@@ -6,7 +6,7 @@ import Profile from "./pages/Profile/Profile";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ backgroundColor: "#0c1317", height: "100vh" }}>
       <BrowserRouter>
         <Routes>
           <Route index path="/" element={<Login />} />
