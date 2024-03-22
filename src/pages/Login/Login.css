@@ -1,0 +1,28 @@
+.login {
+    background-color: #0c1317;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login--form {
+    background-color: #222e35;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 1rem;
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+#login--button {
+    background-color: #06cf9c;
+    padding: 0.3rem 2rem 0.3rem 2rem;
+    border-radius: 1.25rem;
+    border: none;
+    font-weight: 500;
+    font-size: medium;
+    text-transform: capitalize;
+}
