@@ -1,9 +1,9 @@
 import blankProfile from "../../images/blank-profile-picture.png";
 import "./ChatUser.css";
 
-const ChatUser = () => {
+const ChatUser = ({ setIsChatAreaOpen }) => {
     return (
-        <div className="chatUser">
+        <div className="chatUser" onClick={() => setIsChatAreaOpen(true)}>
             <div className="chatUser--description">
                 <img id="chatUser--blankProfile" src={blankProfile} alt="" />
                 <div className="description--about">
