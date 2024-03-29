@@ -7,8 +7,10 @@
 
 .messaging--chatUsers {
     width: 30%;
+    height: 100%;
     border-right: 1px solid #595959;
     border-width: 1px;
+    background-color: #111b21;
 }
 
 .chatUsers--search {
@@ -37,8 +39,9 @@
 }
 
 .chatUsers--conversations {
-    height: 86.1%;
+    height: 85%;
     overflow-y: scroll;
+    padding-bottom: 2rem;
 }
 
 .chatArea--chats {
@@ -48,7 +51,6 @@
 
 ::-webkit-scrollbar {
     width: 10px;
-    height: 10px;
     background-color: #111b21;
     border-radius: 10px;
 }

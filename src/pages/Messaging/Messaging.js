@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { UserContext } from "../../context/UserContext";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ChatUser from "../../components/ChatUser/ChatUser";
 import Message from "../../components/Message/Message";
 import blankProfileImage from "../../images/blank-profile-picture.png";
 import { IoSend } from "react-icons/io5"
 import "./Messaging.css";
+import { userApiRequests } from "../../apiRequests";
 
 const Messaging = () => {
     const [searchQuery, setSearchQuery] = useState();
@@ -12,6 +14,22 @@ const Messaging = () => {
     const [message, setMessage] = useState();
     const [isSentMessage, setIsSentMessage] = useState(false);
     const [isGroupMessage, setIsGroupMessage] = useState(false);
+    const { setProfilePicUrl } = useContext(UserContext);
+
+    useEffect(() => {
+        const getUserAccountInfo = async () => {
+            try {
+                const accessToken = localStorage.getItem("access_token");
+                const response = await userApiRequests.getUserAccountInfo(accessToken);
+                if (response.status === 200) {
+                    setProfilePicUrl(response.data.profilePicUrl);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getUserAccountInfo();
+    }, [])
 
     return (
         <div className="messaging">
@@ -28,26 +46,6 @@ const Messaging = () => {
                 </div>
                 <div className="chatUsers--conversations">
                     <ChatUser setIsChatAreaOpen={setIsChatAreaOpen} />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
-                    <ChatUser />
                 </div>
             </div>
             {
