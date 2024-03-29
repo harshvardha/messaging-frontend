@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authenticationApiRequests } from "../../apiRequests";
 import "./Signup.css";
 
 const Signup = () => {
@@ -6,14 +8,21 @@ const Signup = () => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const [isRegistering, setIsRegistering] = useState(false);
+    const navigateTo = useNavigate();
 
     const registerUser = async (event) => {
         try {
             event.preventDefault();
             setIsRegistering(true);
-            console.log(`email: ${email}`);
-            console.log(`username: ${username}`);
-            console.log(`password: ${password}`);
+            const registrationDetails = {
+                email,
+                username,
+                password
+            };
+            const response = await authenticationApiRequests.register(registrationDetails);
+            if (response.status === 201) {
+                navigateTo("/")
+            }
             setIsRegistering(false);
         } catch (error) {
             console.log(error);

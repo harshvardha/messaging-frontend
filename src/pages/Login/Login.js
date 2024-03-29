@@ -1,17 +1,28 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { authenticationApiRequests } from "../../apiRequests";
 import "./Login.css";
 
 const Login = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [isLoging, setIsLoging] = useState(false);
+    const navigateTo = useNavigate();
 
     const loginUser = async (event) => {
         try {
             event.preventDefault();
             setIsLoging(true);
-            console.log(`email: ${email}`);
-            console.log(`password: ${password}`);
+            const loginDetails = {
+                email,
+                password
+            };
+            const response = await authenticationApiRequests.login(loginDetails);
+            if (response.status === 200) {
+                const data = response.data;
+                localStorage.setItem("access_token", data.accessToken);
+                navigateTo("/messaging");
+            }
             setIsLoging(false);
         } catch (error) {
             console.log(error);
@@ -45,7 +56,10 @@ const Login = () => {
                             />
                         </div>
                     </div>
-                    {isLoging ? <p>Loging In...</p> : <button id="login--button" type="submit">login</button>}
+                    <div style={{ display: "flex", columnGap: "1rem" }}>
+                        {isLoging ? <p>Loging In...</p> : <button id="login--button" type="submit">login</button>}
+                        <Link to={"/signup"} id="signup--button" style={{ textDecoration: "none", color: "black" }}>signup</Link>
+                    </div>
                 </div>
             </form>
         </div>
