@@ -22,6 +22,14 @@ export const userApiRequests = {
     getUserAccountInfo: (accessToken) => {
         api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
         return api.get(`${baseUrl}/user/accountInfo`);
+    },
+    getUserConnections: (accessToken) => {
+        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        return api.get(`${baseUrl}/user/connections`);
+    },
+    searchUser: (accessToken, searchQuery) => {
+        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        return api.get(`${baseUrl}/user/search?query=${searchQuery}`);
     }
 }
 
@@ -37,7 +45,7 @@ export const messageApiRequests = {
     },
     getMessages: (accessToken, recieverId) => {
         api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-        return api.get(`${baseUrl}/message/messages`, recieverId);
+        return api.get(`${baseUrl}/message/messages/${recieverId}`);
     }
 }
 
