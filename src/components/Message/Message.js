@@ -7,7 +7,8 @@ const sentMessageParentStyle = {
     display: "flex",
     width: "100%",
     justifyContent: "flex-end",
-    float: "right"
+    float: "right",
+    paddingTop: "1rem"
 }
 
 const recievedMessageParentStyle = {
@@ -36,19 +37,26 @@ const sentMessageStyle = {
     marginbottom: "1rem"
 }
 
-const message = "Hello my name is Harshvardhan Singh and i live in raebareli."
-
-const Message = ({ isSentMessage, isGroupMessage }) => {
+const Message = ({
+    isSentMessage,
+    isGroupMessage,
+    profilePicUrl,
+    username,
+    messageDescription,
+    messageTime,
+    seen,
+    delivered
+}) => {
     return (
         <div className="message" style={isSentMessage ? sentMessageParentStyle : isGroupMessage ? groupMessageRecievedStyle : recievedMessageParentStyle}>
-            {isGroupMessage && !isSentMessage && <img id="messageProfilePic" src={blankProfileImage} alt="" />}
-            <div className="message--message" style={isSentMessage ? { backgroundColor: "#005c4b", width: message.length <= 77 ? "fit-content" : "50%" } : { backgroundColor: "#202c33", width: "fit-content" }}>
+            {isGroupMessage && !isSentMessage && <img id="messageProfilePic" src={profilePicUrl || blankProfileImage} alt="" />}
+            <div className="message--message" style={isSentMessage ? { backgroundColor: "#005c4b", width: messageDescription.length <= 77 ? "fit-content" : "50%" } : { backgroundColor: "#202c33", width: "fit-content" }}>
                 <div className="message--about" style={isSentMessage ? sentMessageStyle : isGroupMessage ? groupMessageAboutStyle : {}}>
-                    {(!isSentMessage && isGroupMessage) && <p id="messageSender">Harshvardhan Singh</p>}
-                    <p id="messageDescription">{message}</p>
+                    {(!isSentMessage && isGroupMessage) && <p id="messageSender">{username || ""}</p>}
+                    <p id="messageDescription">{messageDescription || ""}</p>
                 </div>
                 <div className="message--timeAndStatus">
-                    <p id="messageTime">7:30 PM</p>
+                    <p id="messageTime">{messageTime}</p>
                     {isSentMessage && <BiCheck id="messageSent" style={{ color: "hsla(0, 0%, 100%, 0.6)" }} />}
                 </div>
             </div>

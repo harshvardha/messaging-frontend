@@ -2,19 +2,69 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../../context/UserContext";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ChatUser from "../../components/ChatUser/ChatUser";
-import Message from "../../components/Message/Message";
-import blankProfileImage from "../../images/blank-profile-picture.png";
-import { IoSend } from "react-icons/io5"
-import "./Messaging.css";
+import ChatArea from "../../components/ChatArea/ChatArea";
 import { userApiRequests } from "../../apiRequests";
+import { timeAgo } from "../../utils/timeAgo";
+import "./Messaging.css";
 
 const Messaging = () => {
     const [searchQuery, setSearchQuery] = useState();
     const [isChatAreaOpen, setIsChatAreaOpen] = useState(false);
-    const [message, setMessage] = useState();
-    const [isSentMessage, setIsSentMessage] = useState(false);
-    const [isGroupMessage, setIsGroupMessage] = useState(false);
+    const [usersSearched, setUsersSearched] = useState(null);
+    const [userConnections, setUserConnections] = useState();
+    const [chatAreaUserId, setChatAreaUserId] = useState();
+    const [chatAreaUserProfilePicUrl, setChatAreaUserProfilePicUrl] = useState();
+    const [chatAreaUsername, setChatAreaUsername] = useState();
     const { setProfilePicUrl } = useContext(UserContext);
+
+    useEffect(() => {
+        const searchUser = async () => {
+            if (searchQuery) {
+                // first we will search in existing user connections
+                const filteredUsers = userConnections?.filter(connection => {
+                    if (connection.username?.startsWith(searchQuery)) {
+                        return <ChatUser
+                            userId={connection.userId}
+                            profilePicUrl={connection.profilePicUrl}
+                            username={connection.username}
+                            recentMessage={connection.description}
+                            setIsChatAreaOpen={setIsChatAreaOpen}
+                            setChatAreaUserId={setChatAreaUserId}
+                            setChatAreaUserProfilePicUrl={setChatAreaUserProfilePicUrl}
+                            setChatAreaUsername={setChatAreaUsername}
+                            dateOrDay={timeAgo(connection.createdAt)}
+                        />
+                    }
+                });
+
+                // if not found in existing user connections then send query to server
+                if (filteredUsers.length === 0) {
+                    const accessToken = localStorage.getItem("access_token");
+                    const response = await userApiRequests.searchUser(accessToken, searchQuery);
+                    if (response.status === 200) {
+                        setUsersSearched(response.data.map(connection =>
+                            <ChatUser
+                                userId={connection._id}
+                                profilePicUrl={connection.profilePicUrl || ""}
+                                username={connection.username}
+                                recentMessage={connection.description || ""}
+                                setIsChatAreaOpen={setIsChatAreaOpen}
+                                setChatAreaUserId={setChatAreaUserId}
+                                setChatAreaUserProfilePicUrl={setChatAreaUserProfilePicUrl}
+                                setChatAreaUsername={setChatAreaUsername}
+                                dateOrDay={""}
+                            />
+                        ))
+                    } else if (response.status === 404) {
+                        window.alert("User not found.");
+                    }
+                }
+            } else {
+                setUsersSearched(null)
+            }
+        }
+        searchUser();
+    }, [searchQuery])
 
     useEffect(() => {
         const getUserAccountInfo = async () => {
@@ -28,8 +78,21 @@ const Messaging = () => {
                 console.log(error);
             }
         }
+
+        const getUserConnections = async () => {
+            try {
+                const accessToken = localStorage.getItem("access_token");
+                const response = await userApiRequests.getUserConnections(accessToken);
+                if (response.status === 200) {
+                    setUserConnections(response.data);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
         getUserAccountInfo();
-    }, [])
+        getUserConnections();
+    }, []);
 
     return (
         <div className="messaging">
@@ -45,35 +108,33 @@ const Messaging = () => {
                     />
                 </div>
                 <div className="chatUsers--conversations">
-                    <ChatUser setIsChatAreaOpen={setIsChatAreaOpen} />
+                    {usersSearched ?
+                        usersSearched :
+                        userConnections?.map(connection =>
+                            <ChatUser
+                                userId={connection.userId}
+                                profilePicUrl={connection.profilePicUrl}
+                                username={connection.username}
+                                recentMessage={connection.description}
+                                setIsChatAreaOpen={setIsChatAreaOpen}
+                                setChatAreaUserId={setChatAreaUserId}
+                                setChatAreaUserProfilePicUrl={setChatAreaUserProfilePicUrl}
+                                setChatAreaUsername={setChatAreaUsername}
+                                dateOrDay={timeAgo(connection.createdAt)}
+                            />
+                        )
+                    }
                 </div>
             </div>
             {
                 isChatAreaOpen ? (
-                    <div className="messaging--chatArea--open">
-                        <div className="chatArea--header">
-                            <img id="blankProfile" src={blankProfileImage} alt="" />
-                            <p>Harshvardhan Singh</p>
-                        </div>
-                        <div className="chatArea--chats">
-                            <Message isSentMessage={false} isGroupMessage={false} />
-                            <Message isSentMessage={true} isGroupMessage={false} />
-                            <Message isSentMessage={false} isGroupMessage={false} />
-                            <Message isSentMessage={true} isGroupMessage={false} />
-                            <Message isSentMessage={false} isGroupMessage={true} />
-                            <Message isSentMessage={true} isGroupMessage={true} />
-                        </div>
-                        <div className="chatArea--footer">
-                            <input
-                                id="chatArea--typeMessage"
-                                type="text"
-                                value={message}
-                                onChange={(event) => setMessage(event.target.value)}
-                                placeholder="Type a message"
-                            />
-                            {message && <IoSend id="chatArea--sentMessage" />}
-                        </div>
-                    </div>
+                    <ChatArea
+                        chatAreaUserProfilePicUrl={chatAreaUserProfilePicUrl}
+                        chatAreaUsername={chatAreaUsername}
+                        chatAreaUserId={chatAreaUserId}
+                        userConnections={userConnections}
+                        setUserConnections={setUserConnections}
+                    />
                 ) : (
                     <div className="messaging--chatArea" />
                 )

@@ -17,7 +17,10 @@ const ProfileHeader = () => {
 
     return (
         <div className="profileHeader">
-            <Link to={"/profile"}>{profilePicUrl ? <img id="blankProfile" src={profilePicUrl} alt="" /> : <img id="blankProfile" src={blankProfile} alt="" />}</Link>
+            <Link to={"/profile"}>{profilePicUrl ?
+                <img id="blankProfile" src={profilePicUrl} alt="" /> :
+                <img id="blankProfile" src={blankProfile} alt="" />}
+            </Link>
             <div className="profileHeader--actions">
                 <MdGroups className="profileHeader--icons" />
                 <RiLogoutCircleLine className="profileHeader--icons" onClick={logout} />
