@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
+import { disconnectSocket } from "../../sockets/SocketConnection";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { MdGroups } from "react-icons/md";
 import blankProfile from "../../images/blank-profile-picture.png";
@@ -12,6 +13,8 @@ const ProfileHeader = () => {
 
     const logout = () => {
         localStorage.removeItem("access_token");
+        disconnectSocket(localStorage.getItem("user_id"));
+        localStorage.removeItem("user_id");
         navigateTo("/");
     }
 
