@@ -1,10 +1,27 @@
 import { io } from "socket.io-client";
 
 let isSocketConnected = false;
-const socket = io("http://localhost:5050");
+let socket;
 
-socket.on("connect", () => isSocketConnected = true);
+const connectSocket = (userId) => {
+    socket = io("http://localhost:5050", {
+        auth: {
+            userId
+        }
+    });
+    socket.on("connect", () => {
+        console.log("socket connection established.");
+        isSocketConnected = true
+    });
+    socket.on("disconnect", () => isSocketConnected = true);
+}
 
-socket.on("disconnect", () => isSocketConnected = false);
+const disconnectSocket = (userId) => {
+    if (isSocketConnected) {
+        socket.emit("user_offline", { userId });
+        socket.close();
+        isSocketConnected = false;
+    }
+}
 
-export { socket, isSocketConnected };
+export { socket, isSocketConnected, connectSocket, disconnectSocket };
