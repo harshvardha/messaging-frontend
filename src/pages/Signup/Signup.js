@@ -26,6 +26,7 @@ const Signup = () => {
             setIsRegistering(false);
         } catch (error) {
             console.log(error);
+            setIsRegistering(false);
         }
     }
 

@@ -57,7 +57,14 @@ const Message = ({
                 </div>
                 <div className="message--timeAndStatus">
                     <p id="messageTime">{messageTime}</p>
-                    {isSentMessage && <BiCheck id="messageSent" style={{ color: "hsla(0, 0%, 100%, 0.6)" }} />}
+                    {isSentMessage ?
+                        delivered ?
+                            seen ?
+                                <IoCheckmarkDoneSharp id="messageSent" style={{ color: "#53bdeb" }} /> :
+                                <IoCheckmarkDoneSharp id="messageSent" style={{ color: "hsla(0, 0%, 100%, 0.6)" }} /> :
+                            <BiCheck id="messageSent" style={{ color: "hsla(0, 0%, 100%, 0.6)" }} /> :
+                        ""
+                    }
                 </div>
             </div>
         </div >

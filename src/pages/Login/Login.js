@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { authenticationApiRequests } from "../../apiRequests";
+import { connectSocket } from "../../sockets/SocketConnection";
 import "./Login.css";
 
 const Login = () => {
@@ -21,11 +22,14 @@ const Login = () => {
             if (response.status === 200) {
                 const data = response.data;
                 localStorage.setItem("access_token", data.accessToken);
+                localStorage.setItem("user_id", data.userId);
+                connectSocket(data.userId);
                 navigateTo("/messaging");
             }
             setIsLoging(false);
         } catch (error) {
             console.log(error);
+            setIsLoging(false);
         }
     }
 

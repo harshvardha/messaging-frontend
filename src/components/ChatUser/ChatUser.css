@@ -18,6 +18,13 @@
     column-gap: 1rem;
 }
 
+/* .chatUser--stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 0.3rem;
+} */
+
 #chatUser--blankProfile {
     width: 3rem;
     border-radius: 50%;
@@ -38,3 +45,16 @@
     align-self: flex-start;
     margin-top: 0.6rem;
 }
+
+/* #chatUser--undeliveredMessagesCount {
+    color: black;
+    font-size: small;
+    font-weight: bold;
+    background-color: #06cf9c;
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
